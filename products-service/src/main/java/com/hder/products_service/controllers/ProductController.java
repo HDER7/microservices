@@ -33,4 +33,11 @@ public class ProductController {
         var p = productService.getAllProducts();
         return ResponseEntity.ok().body(p);
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        var product = productService.getProduct(id);
+        return ResponseEntity.ok().body(product);
+    }
 }

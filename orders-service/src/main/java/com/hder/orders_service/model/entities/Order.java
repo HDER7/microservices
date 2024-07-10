@@ -1,5 +1,6 @@
 package com.hder.orders_service.model.entities;
 
+import com.hder.orders_service.model.dtos.OrderItemsRequest;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -35,4 +35,11 @@ public class ProductService {
         return products.stream().map(ProductResponse::new).toList();
     }
 
+    public ProductResponse getProduct(Long id) {
+        var product = productRepository.findById(id);
+        if (product.isPresent()) {
+            return new ProductResponse(product.get());
+        }
+        throw new RuntimeException("Product not found");
+    }
 }
