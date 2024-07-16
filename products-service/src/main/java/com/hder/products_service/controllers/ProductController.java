@@ -6,6 +6,7 @@ import com.hder.products_service.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,6 +22,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ProductResponse> addProduct(@RequestBody ProductRequest product, UriComponentsBuilder uriBuilder) {
         var p = productService.addProduct(product);
         URI url = uriBuilder.path("/api/product/{id}").buildAndExpand(p.id()).toUri();
@@ -29,6 +31,7 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         var p = productService.getAllProducts();
         return ResponseEntity.ok().body(p);
@@ -36,6 +39,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         var product = productService.getProduct(id);
         return ResponseEntity.ok().body(product);
