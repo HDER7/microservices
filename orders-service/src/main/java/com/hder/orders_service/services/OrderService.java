@@ -1,13 +1,17 @@
 package com.hder.orders_service.services;
 
+import com.hder.orders_service.events.OrderEvent;
 import com.hder.orders_service.model.dtos.BaseResponse;
 import com.hder.orders_service.model.dtos.OrderItemsRequest;
 import com.hder.orders_service.model.dtos.OrderRequest;
 import com.hder.orders_service.model.dtos.OrderResponse;
 import com.hder.orders_service.model.entities.Order;
 import com.hder.orders_service.model.entities.OrderItems;
+import com.hder.orders_service.model.enums.OrderStatus;
 import com.hder.orders_service.repositories.OrderRepository;
+import com.hder.orders_service.utils.JsonUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -20,6 +24,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public OrderResponse placeOrder(OrderRequest orderRequest) {
         //verificar inventario
@@ -36,6 +41,9 @@ public class OrderService {
             order.setOrderNumber(UUID.randomUUID().toString());
             order.setOrderItems(orderRequest.orderItems().stream().map(orderItemsRequest -> mapOrderItemRequestToOrderItem(orderItemsRequest, order)).toList());
             this.orderRepository.save(order);
+            //TODO send message to order topic
+            this.kafkaTemplate.send("orders-topic", JsonUtils.toJson(new OrderEvent(order.getOrderNumber(), order.getOrderItems().size(), OrderStatus.PLACED)));
+
             return new OrderResponse(order);
         }
         throw new IllegalArgumentException("Some of the products are not available");

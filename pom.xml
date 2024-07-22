@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.6</version>
+		<version>3.3.2</version>
 	</parent>
 
 	<groupId>com.hder</groupId>
@@ -26,7 +26,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<spring-cloud.version>2022.0.3</spring-cloud.version>
+		<spring-cloud.version>2023.0.3</spring-cloud.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +39,7 @@
 		<module>inventory-service</module>
 		<module>products-service</module>
 		<module>orders-service</module>
+		<module>notification-service</module>
 	</modules>
 
 	<dependencies>
